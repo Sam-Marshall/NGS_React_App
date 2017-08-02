@@ -1,0 +1,52 @@
+module.exports = function(sequelize, DataTypes) {
+
+    var Sample = sequelize.define("Sample", {
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            field: 'createdAt',
+            defaultValue: sequelize.literal('NOW()')
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            field: 'updatedAt',
+            defaultValue: sequelize.literal('NOW()')
+        }
+    });
+
+    Sample.associate = function(models) {
+        this.belongsTo(models.Project, {
+            foreignKey: {
+                name: 'project_id',
+                allowNull: false
+            }
+        });
+
+        this.belongsTo(models.SampleType, {
+            foreignKey: {
+                name: 'sampletype_id',
+                allowNull: false
+            }
+        });
+
+        this.belongsTo(models.Species, {
+            foreignKey: {
+                name: 'species_id',
+                allowNull: false
+            }
+        });
+
+        this.belongsTo(models.AlignmentGenome, {
+            foreignKey: {
+                name: 'alignmentgenome_id',
+                allowNull: false
+            }
+        });
+
+    }
+
+    return Sample;
+};

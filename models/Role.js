@@ -1,7 +1,7 @@
 module.exports = function(sequelize, DataTypes) {
 
-    var Test = sequelize.define("Test", {
-        test: {
+    var Role = sequelize.define("Role", {
+        role: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -17,5 +17,12 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
 
-    return Test;
+    Role.associate = function(models) {
+        this.hasMany(models.User, {
+            foreignKey: 'role_id'
+        });
+    }
+
+    return Role;
+    
 };

@@ -1,6 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
 
-    var Project = sequelize.define("Project", {
+    var LibraryPrep = sequelize.define("LibraryPrep", {
         name: {
             type: DataTypes.STRING,
             allowNull: false
@@ -17,24 +17,13 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
 
-    Project.associate = function(models) {
-        this.belongsTo(models.User, {
-            foreignKey: {
-                name: 'user_id',
-                allowNull: false
-            }
-        });
-
-        this.hasMany(models.Sample, {
-            foreignKey: 'project_id',
-            onDelete: 'cascade'
-        });
-
+    LibraryPrep.associate = function(models) {
+        
         this.hasMany(models.Library, {
-            foreignKey: 'project_id',
-            onDelete: 'cascade'
+            foreignKey: 'libraryprep_id'
         });
+
     }
 
-    return Project;
+    return LibraryPrep;
 };

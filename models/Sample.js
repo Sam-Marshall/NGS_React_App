@@ -46,6 +46,10 @@ module.exports = function(sequelize, DataTypes) {
             }
         });
 
+        this.hasMany(models.Library, {
+            foreignKey: 'sample_id'
+        });
+
     }
 
     return Sample;

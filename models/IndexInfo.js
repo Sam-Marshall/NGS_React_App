@@ -1,7 +1,11 @@
 module.exports = function(sequelize, DataTypes) {
 
-    var Project = sequelize.define("Project", {
+    var IndexInfo = sequelize.define("IndexInfo", {
         name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        sequence: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -17,24 +21,25 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
 
-    Project.associate = function(models) {
-        this.belongsTo(models.User, {
+    IndexInfo.associate = function(models) {
+
+        this.hasMany(models.Library, {
+            foreignKey: 'forward_id'
+        });
+
+
+        this.hasMany(models.Library, {
+            foreignKey: 'reverse_id'
+        });
+
+        this.belongsTo(models.LibraryPrep, {
             foreignKey: {
-                name: 'user_id',
+                name: 'libraryprep_id',
                 allowNull: false
             }
         });
 
-        this.hasMany(models.Sample, {
-            foreignKey: 'project_id',
-            onDelete: 'cascade'
-        });
-
-        this.hasMany(models.Library, {
-            foreignKey: 'project_id',
-            onDelete: 'cascade'
-        });
     }
 
-    return Project;
+    return IndexInfo;
 };

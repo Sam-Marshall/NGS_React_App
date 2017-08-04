@@ -2,6 +2,9 @@
 import React from 'react';
 import helpers from './utils/helpers';
 
+// Semantic 
+import { Container, Header } from 'semantic-ui-react';
+
 // require components
 import Child from './children/Child'
 
@@ -20,12 +23,14 @@ export default class Main extends React.Component{
 
   render() {
     return (
-      <div className="wrapper">
 
-        <h1>Hello</h1>
+      <Container>
+
+        <Header as='h1'>Hello</Header>
         <Child />
 
-      </div>
+      </Container>
+      
     );
   }
 };

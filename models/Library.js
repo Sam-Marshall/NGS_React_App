@@ -54,6 +54,13 @@ module.exports = function(sequelize, DataTypes) {
             }
         });
 
+        this.belongsTo(models.Pool, {
+            foreignKey: {
+                name: 'pool_id',
+                allowNull: false
+            }
+        });
+
     }
 
     return Library;

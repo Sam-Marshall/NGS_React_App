@@ -7,23 +7,28 @@ module.exports = function(sequelize, DataTypes) {
         },
         firstName: {
             type: DataTypes.STRING,
+            is: ["^[a-z]+$",'i'],
             allowNull: false
         },
         lastName: {
             type: DataTypes.STRING,
+            is: ["^[a-z]+$",'i'],
             allowNull: false
         },
         initials: {
             type: DataTypes.STRING,
+            len: [3, 4],
             allowNull: false
         },
         email: {
             type: DataTypes.STRING,
+            isEmail: true,
             allowNull: false
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false,
+            len: [8, 25],
+            allowNull: false
         },
         createdAt: {
             type: DataTypes.DATE,

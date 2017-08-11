@@ -3,34 +3,42 @@ module.exports = function(sequelize, DataTypes) {
     var Run = sequelize.define("Run", {
         name: {
             type: DataTypes.STRING,
+            isAlphanumeric: true,
             allowNull: false
         },
         flowCellId: {
             type: DataTypes.STRING,
+            isAlphanumeric: true,
             allowNull: false
         },
         flowCellLot: {
             type: DataTypes.STRING,
+            isAlphanumeric: true,
             allowNull: false
         },
         reagentCartId: {
             type: DataTypes.STRING,
+            isAlphanumeric: true,
             allowNull: false
         },
         reagentCartLot: {
             type: DataTypes.STRING,
+            isAlphanumeric: true,
             allowNull: false
         },
         reagentCartType: {
             type: DataTypes.STRING,
+            isAlphanumeric: true,
             allowNull: false
         },
         bufferCartId: {
             type: DataTypes.STRING,
+            isAlphanumeric: true,
             allowNull: false
         },
         bufferCartLot: {
             type: DataTypes.STRING,
+            isAlphanumeric: true,
             allowNull: false
         },
         finalPoolMolarity: {
@@ -39,18 +47,22 @@ module.exports = function(sequelize, DataTypes) {
         },
         readOneLength: {
             type: DataTypes.INTEGER,
+            len: [2,3],
             allowNull: false
         },
         readTwoLength: {
             type: DataTypes.INTEGER,
+            len: [2,3],
             allowNull: true
         },
         indexOneLength: {
             type: DataTypes.INTEGER,
+            len: [1,2],
             allowNull: false
         },
         indexTwoLength: {
             type: DataTypes.INTEGER,
+            len: [1,2],
             allowNull: true
         },
         createdAt: {

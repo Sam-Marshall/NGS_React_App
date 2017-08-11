@@ -3,10 +3,12 @@ module.exports = function(sequelize, DataTypes) {
     var IndexInfo = sequelize.define("IndexInfo", {
         name: {
             type: DataTypes.STRING,
+            isAlphanumeric: true,
             allowNull: false
         },
         sequence: {
             type: DataTypes.STRING,
+            is: ["^[a-z]+$",'i'],
             allowNull: false
         },
         createdAt: {

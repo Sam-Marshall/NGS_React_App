@@ -27,7 +27,6 @@ import helpers from './utils/helpers';
 
 // require components
 import Child from './children/Child'
-import Authenticate from './children/Authenticate'
 
 export default class Main extends React.Component{
 

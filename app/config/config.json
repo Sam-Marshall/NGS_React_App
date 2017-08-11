@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "",
+    "password": "E84lPGKjXhcP",
     "database": "ngsdb",
     "host": "localhost",
     "dialect": "mysql"

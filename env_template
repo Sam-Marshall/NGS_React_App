@@ -1,0 +1,30 @@
+#This is the template for the .env file to be used with the NGS Database Application.
+#Copy this template file to a file named .env and then modify the values according to 
+#your environment. Remember to be sure that you don't add your .env file to the git repo
+#as this can expose secrets.  The .gitignore should include an entry for '.env'.  
+
+#Port for node app to listen on
+APP_PORT=
+
+#Prefix used in URL.  Can be left empty if no prefix used
+URL_PREFIX=
+
+#Host for database server (usually localhost)
+DB_HOST=localhost
+#Port of database server (usually 3306 when using MySQL)
+DB_PORT=3306
+#Name of database
+DB_NAME=
+#Database user
+DB_USER=
+#Password for database user
+DB_PASS=
+
+#Session key and secret
+SESSION_KEY=
+SESSION_SECRET=
+
+#Slack client id and secret. Required for 'Sign In with Slack'
+SLACK_CID=
+SLACK_SECRET=
+

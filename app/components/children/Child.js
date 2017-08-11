@@ -18,6 +18,7 @@ export default class Child extends React.Component{
     return (
       <div className="wrapper">
 
+        <h2>Just to let you know...</h2>
         <h2>I'm a child component</h2>
 
       </div>

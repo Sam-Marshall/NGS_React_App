@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
     var AlignmentGenome = sequelize.define("AlignmentGenome", {
         name: {
             type: DataTypes.STRING,
+            isAlphanumeric: true, 
             allowNull: false
         },
         createdAt: {

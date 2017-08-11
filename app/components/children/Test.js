@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { Container, Header, Form, Button, Checkbox } from 'semantic-ui-react';
 
-export default class Child extends React.Component{
+export default class Test extends React.Component{
   
   constructor(props) {
       super(props);
@@ -55,4 +55,4 @@ export default class Child extends React.Component{
 
 }
 
-module.exports = Child;
+module.exports = Test;

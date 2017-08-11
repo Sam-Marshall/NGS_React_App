@@ -14,8 +14,9 @@ export default class Main extends React.Component{
       super();
       this.state = {
         visible: false,
-        userId: 2,
+        userId: 1,
         userName: '',
+        role: '',
         projectList: []
       };
       this.toggleVisibility = this.toggleVisibility.bind(this);
@@ -25,7 +26,8 @@ export default class Main extends React.Component{
     helpers.getUser(this.state.userId)
       .then(function(response){
         this.setState({
-          userName: `${response.data.firstName} ${response.data.lastName}`
+          userName: `${response.data.firstName} ${response.data.lastName}`,
+          role: response.data.Role.role
         })
       }.bind(this));
 
@@ -61,6 +63,7 @@ export default class Main extends React.Component{
           <Sidebar.Pusher>
             <Segment basic>
               <Header as='h1'>Welcome {this.state.userName}</Header>
+              <Header as='h2'>You are: {this.state.role}</Header>
               <Child userName = {this.state.userName}/>
             </Segment>
           </Sidebar.Pusher>

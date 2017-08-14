@@ -6,6 +6,23 @@ var logger = require("morgan");
 require('dotenv').config();
 const https = require('https');
 
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    console.log("Multer disk storage (destination)");
+    cb(null, 'uploads')
+  },
+  filename: function (req, file, cb) {
+    console.log("Multer disk storage (filename): "+file.fieldname);
+    req.filename = file.fieldname+'-'+Date.now();
+    cb(null, file.fieldname + '-' + Date.now())
+  }
+})
+
+//const upload = multer( {dest: 'uploads/'});
+const upload = multer({ storage: storage });
+
 // Require Models
 var db = require("./models");
 
@@ -37,7 +54,7 @@ app.use(session({
 
 // Sets a port
 var PORT = process.env.PORT || 8080;
-var RESYNCDB = process.env.resyncdb || false;
+var RESYNCDB = process.env.RESYNC_DB || false;
 
 // Run Morgan for Logging
 app.use(logger("dev"));
@@ -53,12 +70,13 @@ require("./routes/apiroutes.js")(app);
 
 const slack_cid = process.env.SLACK_CID;
 const slack_secret = process.env.SLACK_SECRET;
+const slack_redirect = process.env.SLACK_REDIRECT || 'http://localhost';
 
 function getSlackAccessToken(code, callback) {
 
     return https.get({
         host: 'slack.com',
-        path: '/api/oauth.access?client_id='+slack_cid+'&client_secret='+slack_secret+'&code='+code
+        path: '/api/oauth.access?client_id='+slack_cid+'&client_secret='+slack_secret+'&code='+code+'&redirect_uri='+slack_redirect
     }, function(response) {
         // Continuously update stream with data
         var body = '';
@@ -83,6 +101,13 @@ app.get('/auth/slack/redirect/', function(req, res) {
   });
 });
 
+app.post('/sample/upload', upload.single('samplefile'), function(req, res, next) {
+  console.log('Sample file was uploaded and stored as: '+req.filename);
+
+
+  res.json({"status": "OK", "statuscode": 200});
+})
+
 app.get('/user/', function(req, res) {
   console.log("User request.");
   res.json({"users":[{"username":"gpcrawford"}, {"username":"marjorie.k"}, {"username":"sam-marshall"}]});
@@ -99,8 +124,11 @@ app.post('/user/', function(req, res) {
 });
 
 if (RESYNCDB) {
-
   db.sequelize.sync({ force: true }).then(function() {
+      db.Role.buildDev();
+      db.Species.buildDev();
+      db.AlignmentGenome.buildDev();
+      db.SampleType.buildDev();
       app.listen(PORT, function() {
           console.log("App listening on PORT: " + PORT);
       });

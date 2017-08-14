@@ -4,6 +4,7 @@ import helpers from './utils/helpers';
 import {
   Accordion,
   Button,
+  Checkbox,
   Container,
   Divider,
   Dropdown,
@@ -29,7 +30,12 @@ export default class Tech extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { };
+    this.state = {
+      thingOne: "Project One",
+      thingTwo: "fec",
+      thingThree: "hg19",
+      thingFour: "15"
+    };
 
     {/*this.openModal = () => this.setState({newSampleModalOpen: true});
     this.closeModal = () => this.setState({newSampleModalOpen: false});
@@ -52,32 +58,34 @@ export default class Tech extends React.Component {
               <Table celled>
                 <Table.Header>
                   <Table.Row>
-                    <Table.HeaderCell>Id</Table.HeaderCell>
-                    <Table.HeaderCell>Name</Table.HeaderCell>
-                    <Table.HeaderCell>Project</Table.HeaderCell>
-                    <Table.HeaderCell>Species</Table.HeaderCell>
+                    <Table.HeaderCell>Add To Pool?</Table.HeaderCell>
+                    <Table.HeaderCell>Project Name</Table.HeaderCell>
+                    <Table.HeaderCell>Scientist</Table.HeaderCell>
+                    <Table.HeaderCell>Genome</Table.HeaderCell>
+                    <Table.HeaderCell>Number of Samples</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
+                  <Table.Row>
+                    <Table.Cell collapsing>
+                      <Checkbox slider />
+                    </Table.Cell>
+                      <Table.Cell>{this.state.thingOne}</Table.Cell>
+                      <Table.Cell>{this.state.thingTwo}</Table.Cell>
+                      <Table.Cell>{this.state.thingThree}</Table.Cell>
+                      <Table.Cell>{this.state.thingFour}</Table.Cell>
+                  </Table.Row>
                 </Table.Body>
 
-                <Table.Footer>
-                <Table.Row>
-                  <Table.HeaderCell colSpan='3'>
-                    <Menu floated='right' pagination>
-                      <Menu.Item as='a' icon>
-                        <Icon name='left chevron' />
-                      </Menu.Item>
-                      <Menu.Item as='a'>1</Menu.Item>
-                      <Menu.Item as='a'>2</Menu.Item>
-                      <Menu.Item as='a'>3</Menu.Item>
-                      <Menu.Item as='a'>4</Menu.Item>
-                      <Menu.Item as='a' icon>
-                        <Icon name='right chevron' />
-                      </Menu.Item>
-                    </Menu>
-                  </Table.HeaderCell>
-                </Table.Row>
+                <Table.Footer fullWidth>
+                  <Table.Row>
+                    <Table.HeaderCell />
+                    <Table.HeaderCell colSpan='4'>
+                      <Button floated='right' icon labelPosition='left' primary size='small'>
+                        <Icon name='plus' />Pool Samples
+                      </Button>
+                    </Table.HeaderCell>
+                  </Table.Row>
                 </Table.Footer>
             </Table>
         </Tab.Pane> },

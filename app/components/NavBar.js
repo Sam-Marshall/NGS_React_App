@@ -104,6 +104,14 @@ export default class NavBar extends React.Component {
                   onClick={this.onClickHandler}>
                   Libraries
                 </Menu.Item>
+
+                <Menu.Item
+                  as={NavLink} to='/tech'
+                  name={'tech'}
+                  active={activeItem === 'tech'}
+                  onClick={this.onClickHandler}>
+                  Tech
+                </Menu.Item>
  
                 <Menu.Item position='right'>
                   <Button as='a' href="https://slack.com/oauth/authorize?scope=identity.basic,identity.email&client_id=187494903379.207940946065" inverted style={{ marginLeft: '0.5em' }}>Slack Login</Button>

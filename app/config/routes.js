@@ -8,6 +8,7 @@ import Users from '../components/Users';
 import Samples from '../components/Samples';
 import Libraries from '../components/Libraries';
 import NavBar from '../components/NavBar';
+import Tech from '../components/Tech';
 
 export default class Routes extends React.Component {
   constructor() {
@@ -73,6 +74,13 @@ export default class Routes extends React.Component {
               render={() =>
                 (
                   <Libraries />
+                )}
+            />
+
+            <Route path="/tech"
+              render={() =>
+                (
+                  <Tech />
                 )}
             />
           </Switch>

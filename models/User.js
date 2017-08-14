@@ -25,9 +25,9 @@ module.exports = function(sequelize, DataTypes) {
             isEmail: true,
             allowNull: false
         },
-        password: {
-            type: DataTypes.STRING,
-            len: [8, 25],
+        isActive: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: 1,
             allowNull: false
         },
         createdAt: {

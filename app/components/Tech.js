@@ -164,12 +164,10 @@ export default class Tech extends React.Component {
         </Segment>
         <Grid>
           <Grid.Row>
-            <Grid.Column width={9}>
+            <Grid.Column width={11}>
               
               <Grid.Row>
-                <Segment>
-                  <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
-                </Segment>
+                <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
               </Grid.Row>
 
               <Grid.Row>
@@ -179,7 +177,7 @@ export default class Tech extends React.Component {
               </Grid.Row>
 
             </Grid.Column>
-            <Grid.Column width={7}>
+            <Grid.Column width={5}>
               <Container textAlign="center">
                 <h2>Some Other Content</h2>
               </Container>

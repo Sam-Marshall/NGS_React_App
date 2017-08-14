@@ -23,5 +23,11 @@ module.exports = function(sequelize, DataTypes) {
         });
     }
 
+    Species.buildDev = function() {
+      Species.build({name: 'Mus Musculus'}).save();
+      Species.build({name: 'Homo Sapiens'}).save();
+      Species.build({name: 'Caenorhabditis Elegans'}).save();
+    }
+
     return Species;
 };

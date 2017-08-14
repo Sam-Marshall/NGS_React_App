@@ -1,5 +1,7 @@
 import React from 'react';
 
+import axios from 'axios';
+
 import {
   Accordion,
   Button,
@@ -35,7 +37,8 @@ export default class Samples extends React.Component {
                    enterSampleModalOpen:false,
                    uploadSampleModalOpen:false,
                    pasteSampleModalOpen:false,
-                   newSampleModalOpen:false };
+                   newSampleModalOpen:false,
+                   fileToUpload: '' };
 
     // This code is for demo purposes.  The true values need to be read from database.
     this.state.projects.push({text: 'project 1', value: 101});
@@ -73,6 +76,24 @@ export default class Samples extends React.Component {
 
     this.openPasteModal = () => this.setState({pasteSampleModalOpen:true});
     this.closePasteModal = () => this.setState({pasteSampleModalOpen:false});
+
+    this.onFileChange = (e) => {
+//      alert(e.target.files[0].name);
+      this.setState({fileToUpload: e.target.files[0]});
+    }
+
+    this.uploadFile = () => {
+      const url = '/sample/upload';
+      const formData = new FormData();
+      formData.append('samplefile', this.state.fileToUpload);
+      const config = {
+         headers: {
+            'content-type': 'multipart/form-data'
+         }
+      }
+
+      return axios.post(url, formData, config);
+    }
   }
 
   componentDidMount() {
@@ -134,11 +155,11 @@ export default class Samples extends React.Component {
     </Modal.Header>
     <Modal.Content>
       <Form>
-        <input type="file" name="csvdatafile" />
+        <input type="file" name="samplefile" onChange={this.onFileChange} />
       </Form>
       <Segment basic textAlign="center">
         <Button.Group>
-        <Button positive>Save</Button>
+        <Button positive onClick={this.uploadFile}>Save</Button>
         <Button.Or />
         <Button onClick={this.closeUploadModal}>Cancel</Button>
         </Button.Group>

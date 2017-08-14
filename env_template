@@ -27,4 +27,4 @@ SESSION_SECRET=
 #Slack client id and secret. Required for 'Sign In with Slack'
 SLACK_CID=
 SLACK_SECRET=
-
+SLACK_REDIRECT=

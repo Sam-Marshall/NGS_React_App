@@ -23,5 +23,10 @@ module.exports = function(sequelize, DataTypes) {
         });
     }
 
+    SampleType.buildDev = function() {
+      SampleType.build({name: 'RNA'}).save();
+      SampleType.build({name: 'DNA'}).save();
+    }
+
     return SampleType;
 };

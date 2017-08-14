@@ -24,5 +24,11 @@ module.exports = function(sequelize, DataTypes) {
         });
     }
 
+    AlignmentGenome.buildDev = function() {
+      AlignmentGenome.build({name: 'mm9'}).save();
+      AlignmentGenome.build({name: 'mm10'}).save();
+      AlignmentGenome.build({name: 'hg38'}).save();
+    }
+
     return AlignmentGenome;
 };

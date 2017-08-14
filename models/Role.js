@@ -24,6 +24,11 @@ module.exports = function(sequelize, DataTypes) {
         });
     }
 
+    Role.buildDev = function() {
+      var rec = Role.build({role: 'sysadmin'});
+      rec.save();
+    }
+
     return Role;
     
 };

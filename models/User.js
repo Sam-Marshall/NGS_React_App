@@ -56,7 +56,8 @@ module.exports = function(sequelize, DataTypes) {
     }
 
     User.buildDev = function() {
-      User.build({userName: 'gpcrawford', firstName: 'Greg', lastName: 'Crawford', initials: 'gpc', email: 'gpcrawford@northwestern.edu', password: 'blah', role_id: 1}).save();
+      User.build({userName: 'gpcrawford', firstName: 'Greg', lastName: 'Crawford', initials: 'gpc', email: 'gpcrawford@northwestern.edu',  role_id: 1, isActive: 1}).save();
+      User.build({userName: 'christie.sze', firstName: 'Christie', lastName: 'Sze', initials: 'ccs', email: 'testuser@somedomain.com', role_id: 2, isActive: 1}).save();
     }
 
     return User;

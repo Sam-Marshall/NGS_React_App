@@ -55,5 +55,9 @@ module.exports = function(sequelize, DataTypes) {
         });
     }
 
+    User.buildDev = function() {
+      User.build({userName: 'gpcrawford', firstName: 'Greg', lastName: 'Crawford', initials: 'gpc', email: 'gpcrawford@northwestern.edu', password: 'blah', role_id: 1}).save();
+    }
+
     return User;
 };

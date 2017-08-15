@@ -5,6 +5,16 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
+        hasBeenProcessed: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: 0,
+            allowNull: false
+        },
+        isHidden:{
+            type: DataTypes.BOOLEAN,
+            defaultValue: 0,
+            allowNull: false
+        },
         createdAt: {
             type: DataTypes.DATE,
             field: 'createdAt',

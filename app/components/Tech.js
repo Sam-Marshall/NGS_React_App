@@ -80,7 +80,7 @@ export default class Tech extends React.Component {
                 <Table.Footer fullWidth>
                   <Table.Row>
                     <Table.HeaderCell />
-                    <Table.HeaderCell colSpan='4'>
+                    <Table.HeaderCell colSpan='5'>
                       <Button floated='right' icon labelPosition='left' primary size='small'>
                         <Icon name='plus' />Pool Samples
                       </Button>

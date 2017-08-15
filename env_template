@@ -4,7 +4,7 @@
 #as this can expose secrets.  The .gitignore should include an entry for '.env'.  
 
 #Port for node app to listen on
-APP_PORT=
+PORT=
 
 #Prefix used in URL.  Can be left empty if no prefix used
 URL_PREFIX=

@@ -92,7 +92,9 @@ export default class Samples extends React.Component {
          }
       }
 
-      return axios.post(url, formData, config);
+      axios.post(url, formData, config).then(resp => {
+        this.closeUploadModal();
+      });
     }
   }
 

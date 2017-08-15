@@ -36,5 +36,11 @@ module.exports = function(sequelize, DataTypes) {
         });
     }
 
+    Project.buildDev = function() {
+      Project.build({name: 'Mouse Aging', user_id: 1}).save();
+      Project.build({name: 'Flu', user_id: 1}).save();
+      Project.build({name: 'Another Project', user_id: 1}).save();
+    }
+
     return Project;
 };

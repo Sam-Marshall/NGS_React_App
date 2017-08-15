@@ -8,6 +8,9 @@ const https = require('https');
 
 const multer = require('multer');
 
+const fs = require('fs');
+const parse = require('csv-parse');
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     console.log("Multer disk storage (destination)");
@@ -20,7 +23,6 @@ const storage = multer.diskStorage({
   }
 })
 
-//const upload = multer( {dest: 'uploads/'});
 const upload = multer({ storage: storage });
 
 // Require Models
@@ -70,7 +72,7 @@ require("./routes/apiroutes.js")(app);
 
 const slack_cid = process.env.SLACK_CID;
 const slack_secret = process.env.SLACK_SECRET;
-const slack_redirect = process.env.SLACK_REDIRECT || 'http://localhost';
+const slack_redirect = process.env.SLACK_REDIRECT || 'http://localhost/auth/slack/redirect';
 
 function getSlackAccessToken(code, callback) {
 
@@ -104,8 +106,61 @@ app.get('/auth/slack/redirect/', function(req, res) {
 app.post('/sample/upload', upload.single('samplefile'), function(req, res, next) {
   console.log('Sample file was uploaded and stored as: '+req.filename);
 
+  var nRows = 0;
+  var sampleTypeId = 0;
+  var speciesId = 0;
+  var alignmentGenome = 0;
+  var userId = 0;
+//Iterate over file, skipping first 4 lines
+  fs.createReadStream("uploads/"+req.filename)
+    .pipe(parse({auto_parse: true, from: 5}))
+    .on('data', function(cols) {
+      console.log("Line has been read." + cols[3]);
+      //Get id for sampletype
+      db.SampleType.findOne({
+          where: {
+            name: cols[4]
+          }
+      }).then(function(resp) {
+        console.log("Got sample type: "+resp.name);
+        sampleTypeId = resp.id;
+        //Get id for species
+        db.Species.findOne({
+            where: {
+              name: cols[1]
+            }
+          }).then(function(resp) {
+              console.log("Got species: "+resp.name);
+              speciesId = resp.id;
+              //Get id for alignment genome
+              db.AlignmentGenome.findOne({
+                 where: {
+                   name: cols[2]
+                 }
+              }).then(function(resp) {
+                   console.log("Got alignment genome: "+resp.name);
+                   alignmentGenomeId = resp.id;
+                   // Get id of user with initials
+                   db.User.findOne({
+                      where: {
+                        initials: cols[5]
+                      }
+                   }).then(function(resp) {
+                      console.log("Got user: "+resp.userName);
+                      userId = resp.id;
+                      db.Sample.create({name: cols[3], project_id: 1, sampletype_id: sampleTypeId, species_id: speciesId, alignmentgenome_id: alignmentGenomeId});
+                      nRows++;
+                     })
+                 })
+            });
+        });  
+    })
+    .on('end', function() {
+      console.log("End of file.");
 
-  res.json({"status": "OK", "statuscode": 200});
+      res.json({"status": "OK", "statuscode": 200, "nrows":nRows});
+    });
+
 })
 
 app.get('/user/', function(req, res) {
@@ -126,9 +181,11 @@ app.post('/user/', function(req, res) {
 if (RESYNCDB) {
   db.sequelize.sync({ force: true }).then(function() {
       db.Role.buildDev();
+      db.User.buildDev();
       db.Species.buildDev();
       db.AlignmentGenome.buildDev();
       db.SampleType.buildDev();
+      db.Project.buildDev();
       app.listen(PORT, function() {
           console.log("App listening on PORT: " + PORT);
       });

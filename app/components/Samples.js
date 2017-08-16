@@ -220,6 +220,8 @@ export default class Samples extends React.Component {
           <Table.HeaderCell>Name</Table.HeaderCell>
           <Table.HeaderCell>Sample Type</Table.HeaderCell>
           <Table.HeaderCell>Species</Table.HeaderCell>
+          <Table.HeaderCell>Alignment</Table.HeaderCell>
+          <Table.HeaderCell>Scientist</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -238,6 +240,12 @@ export default class Samples extends React.Component {
                 </Table.Cell>
                 <Table.Cell>
                   {sample.species}
+                </Table.Cell>
+                <Table.Cell>
+                  {sample.alignmentgenome}
+                </Table.Cell>
+                <Table.Cell>
+                  {sample.inits}
                 </Table.Cell>
               </Table.Row>
             )

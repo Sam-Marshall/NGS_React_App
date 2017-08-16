@@ -146,6 +146,9 @@ export default class Users extends React.Component {
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Username</Table.HeaderCell>
+          <Table.HeaderCell>Name</Table.HeaderCell>
+          <Table.HeaderCell>Initials</Table.HeaderCell>
+          <Table.HeaderCell>Email</Table.HeaderCell>
           <Table.HeaderCell>Privileges</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
@@ -153,12 +156,21 @@ export default class Users extends React.Component {
       <Table.Body>
         {this.state.users.map(user => {
             return(
-              <Table.Row>
+              <Table.Row key={user.id}>
                 <Table.Cell>
-                  {user.username}
+                  {user.userName}
                 </Table.Cell>
                 <Table.Cell>
-                  Sys Admin
+                  {user.firstName} {user.lastName}
+                </Table.Cell>
+                <Table.Cell>
+                  {user.initials}
+                </Table.Cell>
+                <Table.Cell>
+                  {user.email}
+                </Table.Cell>
+                <Table.Cell>
+                  {user.Role.role}
                 </Table.Cell>
               </Table.Row>
             )

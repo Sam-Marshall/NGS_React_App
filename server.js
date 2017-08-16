@@ -176,7 +176,12 @@ app.post('/sample/upload', upload.single('samplefile'), function(req, res, next)
 
 app.get('/user/', function(req, res) {
   console.log("User request.");
-  res.json({"users":[{"username":"gpcrawford"}, {"username":"marjorie.k"}, {"username":"sam-marshall"}]});
+  db.User.findAll({
+      include: [db.Role]
+    }).then(function(records) {
+    res.json({users: records});
+  });
+//  res.json({"users":[{"username":"gpcrawford"}, {"username":"marjorie.k"}, {"username":"sam-marshall"}]});
 });
 
 

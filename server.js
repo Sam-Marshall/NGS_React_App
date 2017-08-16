@@ -106,23 +106,25 @@ app.get('/auth/slack/redirect/', function(req, res) {
 app.post('/sample/upload', upload.single('samplefile'), function(req, res, next) {
   console.log('Sample file was uploaded and stored as: '+req.filename);
 
-  var nRows = 0;
+  var rowsProcessed = 0;
+  var rowsRead = 0;
+  var samples = [];
   var sampleTypeId = 0;
   var speciesId = 0;
   var alignmentGenome = 0;
   var userId = 0;
+  var endOfFile = false;
 //Iterate over file, skipping first 4 lines
   fs.createReadStream("uploads/"+req.filename)
     .pipe(parse({auto_parse: true, from: 5}))
     .on('data', function(cols) {
-      console.log("Line has been read." + cols[3]);
+      rowsRead++;
       //Get id for sampletype
       db.SampleType.findOne({
           where: {
             name: cols[4]
           }
       }).then(function(resp) {
-        console.log("Got sample type: "+resp.name);
         sampleTypeId = resp.id;
         //Get id for species
         db.Species.findOne({
@@ -130,7 +132,6 @@ app.post('/sample/upload', upload.single('samplefile'), function(req, res, next)
               name: cols[1]
             }
           }).then(function(resp) {
-              console.log("Got species: "+resp.name);
               speciesId = resp.id;
               //Get id for alignment genome
               db.AlignmentGenome.findOne({
@@ -138,7 +139,6 @@ app.post('/sample/upload', upload.single('samplefile'), function(req, res, next)
                    name: cols[2]
                  }
               }).then(function(resp) {
-                   console.log("Got alignment genome: "+resp.name);
                    alignmentGenomeId = resp.id;
                    // Get id of user with initials
                    db.User.findOne({
@@ -146,19 +146,30 @@ app.post('/sample/upload', upload.single('samplefile'), function(req, res, next)
                         initials: cols[5]
                       }
                    }).then(function(resp) {
-                      console.log("Got user: "+resp.userName);
                       userId = resp.id;
-                      db.Sample.create({name: cols[3], project_id: 1, sampletype_id: sampleTypeId, species_id: speciesId, alignmentgenome_id: alignmentGenomeId});
-                      nRows++;
+                      db.Sample.create({
+                        name: cols[3],
+                        project_id: 1,
+                        sampletype_id: sampleTypeId,
+                        species_id: speciesId,
+                        alignmentgenome_id: alignmentGenomeId
+                      }).then(function(record) {
+                           console.log(record.id);
+                           rowsProcessed++;
+                           samples.push({id: record.id, name: cols[3], sampletype:cols[4], species:cols[1], alignmentgenome: cols[2], inits:cols[5]});
+                           if (endOfFile & (rowsProcessed == rowsRead)) {
+                             res.json({"status": "OK", "statuscode": 200, "nrows":rowsProcessed, "samples":samples});
+                           }
+                         });
                      })
                  })
             });
         });  
     })
     .on('end', function() {
-      console.log("End of file.");
-
-      res.json({"status": "OK", "statuscode": 200, "nrows":nRows});
+      console.log("End of file. nRows: "+rowsRead);
+      endOfFile = true;
+//      res.json({"status": "OK", "statuscode": 200, "nrows":nRows, "samples":samples});
     });
 
 })

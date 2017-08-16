@@ -94,6 +94,8 @@ export default class Samples extends React.Component {
 
       axios.post(url, formData, config).then(resp => {
         this.closeUploadModal();
+        // Insert returned data into view.
+        this.setState({samples: resp.data.samples});
       });
     }
   }
@@ -200,8 +202,8 @@ export default class Samples extends React.Component {
        <Grid.Column width={2}><div></div></Grid.Column>
        <Grid.Column width={12}>
          <Segment textAlign="right">
-           <Button onClick={this.openEnterModal} >Enter Sample</Button>
            <Button onClick={this.openUploadModal} >Upload Samples</Button>
+           <Button onClick={this.openEnterModal} >Enter Sample</Button>
            <Button onClick={this.openPasteModal} >Paste Samples</Button>
          </Segment>
        </Grid.Column>
@@ -216,26 +218,32 @@ export default class Samples extends React.Component {
         <Table.Row>
           <Table.HeaderCell>Id</Table.HeaderCell>
           <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.HeaderCell>Project</Table.HeaderCell>
+          <Table.HeaderCell>Sample Type</Table.HeaderCell>
           <Table.HeaderCell>Species</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
-{/*
+
         {this.state.samples.map(sample => {
             return(
-              <Table.Row>
+              <Table.Row key={sample.id}>
                 <Table.Cell>
-                  {sample.sampleid}
+                  {sample.id}
                 </Table.Cell>
                 <Table.Cell>
-                  Sys Admin
+                  {sample.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {sample.sampletype}
+                </Table.Cell>
+                <Table.Cell>
+                  {sample.species}
                 </Table.Cell>
               </Table.Row>
             )
           })
         }
-*/}
+
       </Table.Body>
 
       <Table.Footer>

@@ -56,7 +56,11 @@ app.use(session({
 
 // Sets a port
 var PORT = process.env.PORT || 8080;
-var RESYNCDB = process.env.RESYNC_DB || false;
+
+// Environment flag can force DB resync
+var RESYNCDB = false;
+if (process.env.RESYNC_DB && (process.env.RESYNC_DB == 'true'))
+  RESYNCDB = true;
 
 // Run Morgan for Logging
 app.use(logger("dev"));
@@ -97,10 +101,32 @@ app.get('/auth/slack/redirect/', function(req, res) {
   console.log("Auth redirect");
   getSlackAccessToken(req.query.code, function(data) {
     console.log("Slack auth token response. ",data);
-    req.session.authenticated = true;
-    req.session.username = data.user.name;
-    res.redirect('/');
+    //Check that user exists in database
+    db.User.findOne({where: {userName: data.user.name}, include:{model: db.Role} }).then(function(rec){
+      if (rec == null) {
+        req.session.authenticated = false;
+        req.session.role = 'none';
+        res.redirect('/')
+      }
+      else {
+        console.log("Found user in database");
+        req.session.userid = data.user.id;
+        req.session.authenticated = true;
+        req.session.username = data.user.name;
+        req.session.role = rec.Role.role;
+        req.session.fullname = rec.firstName+' '+rec.lastName;
+        res.redirect('/');
+      }
+    });
   });
+});
+
+app.get('/logout', function(req, res) {
+  console.log("Logout");
+
+  req.session.destroy();
+
+  res.redirect('/')
 });
 
 app.post('/sample/upload', upload.single('samplefile'), function(req, res, next) {
@@ -181,16 +207,15 @@ app.get('/user/', function(req, res) {
     }).then(function(records) {
     res.json({users: records});
   });
-//  res.json({"users":[{"username":"gpcrawford"}, {"username":"marjorie.k"}, {"username":"sam-marshall"}]});
 });
 
-
 app.post('/user/', function(req, res) {
-  console.log("User POST");
-  db.User.findOrCreate({where:{userName:"gpcrawford"}, defaults:{role_id: 1, firstName:"Greg", lastName:"Crawford", email:"gpcrawford@northwestern.edu", initials:"gpc", password:""}})
+  console.log("User POST. username: "+req.body.username);
+/*  db.User.findOrCreate({where:{userName:"gpcrawford"}, defaults:{role_id: 1, firstName:"Greg", lastName:"Crawford", email:"gpcrawford@northwestern.edu", initials:"gpc", password:""}})
       .spread((user, created) => {
         console.log(created)
       })
+*/
   res.json({"status":"OK", "statuscode":200});
 });
 

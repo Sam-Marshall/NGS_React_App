@@ -5,8 +5,11 @@ var helper = {
 
     getUser: function(userId) {
         return axios.get(`/api/user/${userId}`);
-    }
+    },
 
+   getUserInfo: () => {
+     return axios.get('/api/user/0');
+   },
 };
 
 // We export the API helper

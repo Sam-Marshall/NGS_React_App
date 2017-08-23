@@ -29,8 +29,18 @@ export default class Users extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { users:[], newUserModalOpen:false, privilege: 'user' };
+    this.state = { 
+      users:[], 
+      newUserModalOpen:false,
+      privilege: 'user',
+      username: '',
+      firstname: '',
+      lastname: '',
+      initials: '',
+      email: ''
+    };
 
+    this.handleMessage = (e) => {this.setState({username: e.target.value})}
     this.openModal = () => this.setState({newUserModalOpen: true});
     this.closeModal = () => this.setState({newUserModalOpen: false});
 
@@ -38,7 +48,8 @@ export default class Users extends React.Component {
       this.setState({ privilege: value })
     }
 
-    this.clickSaveUser = () => {
+    this.clickSaveUser = (e) => {
+      alert('Username: '+this.state.username);
       axios.post('/user', {
         username:"gpcrawford",
         
@@ -80,7 +91,7 @@ export default class Users extends React.Component {
       </Modal.Description>
       <Form>
        <Form.Field>
-         <Input placeholder="Username" />
+         <Input placeholder="Username" onChange={this.handleMessage.bind(this)} />
        </Form.Field> 
        <Form.Field>
           Privilege Level: <b>{this.state.privilege}</b>

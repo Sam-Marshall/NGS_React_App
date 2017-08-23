@@ -15,21 +15,6 @@ export default class Routes extends React.Component {
     super();
 
     this.state = {};
-    this.state['testval'] = "One";
-    this.state['sbvisible'] = false;
-
-    this.sidebarVisible = false;
-
-    this.toggleSidebar = () => {
-//      alert("Sidebar toggle clicked.");
-
-      this.setState({sbvisible: !this.state.sbvisible});
-
-      if (this.state.testval === "One")
-        this.setState({testval: "Zero"});
-      else
-        this.setState({testval: "One"});
-    }
   }
 
   componentDidMount() {
@@ -39,21 +24,18 @@ export default class Routes extends React.Component {
   }
 
   render() {
-    const {testval} = this.state;
-    const {sbvisible} = this.state;
 
     return (
       <HashRouter>
         <div>
-          <NavBar toggleSidebar={this.toggleSidebar}>
-          </NavBar>
+          <NavBar />
           <Switch>
             <Route exact path="/" render={()=>(<Redirect to="/home"/>)} />
             <Route path="/home" component={Main}/>
             <Route path="/projects"
               render={() =>
                (
-                 <Projects sbvisible={sbvisible} />
+                 <Projects />
                )}
             />
             <Route path="/users"

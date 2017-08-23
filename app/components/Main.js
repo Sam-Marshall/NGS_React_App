@@ -22,6 +22,7 @@ import {
 } from 'semantic-ui-react';
 
 import { Link } from 'react-router-dom';
+
 import helpers from './utils/helpers';
 
 
@@ -43,14 +44,14 @@ export default class Main extends React.Component{
   }
 
   componentDidMount() {
-    helpers.getUser(this.state.userId)
+/*    helpers.getUser(this.state.userId)
       .then(function(response){
         this.setState({
           userName: `${response.data.firstName} ${response.data.lastName}`,
           role: response.data.Role.role
         })
       }.bind(this));
-
+*/
   }
 
   componentDidUpdate(prevProps, prevState) {

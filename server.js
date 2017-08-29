@@ -13,11 +13,9 @@ const parse = require('csv-parse');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log("Multer disk storage (destination)");
     cb(null, 'uploads')
   },
   filename: function (req, file, cb) {
-    console.log("Multer disk storage (filename): "+file.fieldname);
     req.filename = file.fieldname+'-'+Date.now();
     cb(null, file.fieldname + '-' + Date.now())
   }
@@ -130,7 +128,7 @@ app.get('/logout', function(req, res) {
 });
 
 app.post('/sample/upload', upload.single('samplefile'), function(req, res, next) {
-  console.log('Sample file was uploaded and stored as: '+req.filename);
+  console.log('Sample file was uploaded and stored as: '+req.filename+' group is: '+req.body.group);
 
   var rowsProcessed = 0;
   var rowsRead = 0;
@@ -184,6 +182,7 @@ app.post('/sample/upload', upload.single('samplefile'), function(req, res, next)
                            rowsProcessed++;
                            samples.push({id: record.id, name: cols[3], sampletype:cols[4], species:cols[1], alignmentgenome: cols[2], inits:cols[5]});
                            if (endOfFile & (rowsProcessed == rowsRead)) {
+                             console.log('Sample file was uploaded and stored as: '+req.filename+' group is: '+req.body.group);
                              res.json({"status": "OK", "statuscode": 200, "nrows":rowsProcessed, "samples":samples});
                            }
                          });
@@ -199,6 +198,16 @@ app.post('/sample/upload', upload.single('samplefile'), function(req, res, next)
     });
 
 })
+
+app.get('/sample/', function(req, res) {
+  console.log("Sample request.");
+
+  db.Sample.findAll({
+      include: [db.SampleType, db.Species, db.AlignmentGenome, {model: db.Project, include:[db.User]}]
+    }).then(function(recs) {
+    res.json({samples: recs});
+  });
+});
 
 app.get('/user/', function(req, res) {
   console.log("User request.");

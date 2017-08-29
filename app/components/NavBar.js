@@ -29,7 +29,8 @@ export default class NavBar extends React.Component {
                   userName: '',
                   userRole: 'none',
                   activeItem:'home'};
-    
+   
+    this.slackHRef="https://slack.com/oauth/authorize?scope=identity.basic,identity.email&client_id=187494903379.207940946065"; 
 
     this.onClickHandler = (e, props) => {
 //      alert("This is the Click Handler: "+props.name);
@@ -144,7 +145,7 @@ export default class NavBar extends React.Component {
             <Menu.Item position='right'>
               {!isAuthenticated ? (
                 <Button as='a'
-                  href="https://slack.com/oauth/authorize?scope=identity.basic,identity.email&client_id=187494903379.207940946065"
+                  href="https://slack.com/oauth/authorize?scope=identity.basic&client_id=187494903379.207940946065"
                   inverted style={{ marginLeft: '0.5em' }}
                 >
                  Slack Login
@@ -157,11 +158,13 @@ export default class NavBar extends React.Component {
                   Log Out
                 </Button>
               )}
+{/*
               <Button as='a'
                 inverted style={{ marginLeft: '0.5em' }}
               >
                 Sign Up
               </Button>
+*/ }
             </Menu.Item>
           </Menu>
         </Container>

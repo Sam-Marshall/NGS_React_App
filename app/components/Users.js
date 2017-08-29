@@ -119,6 +119,16 @@ export default class Users extends React.Component {
         <Form.Field>
           <Checkbox
             radio
+            label='Admin'
+            name='checkboxRadioGroup'
+            value='admin'
+            checked={this.state.privilege === 'admin'}
+            onChange={this.setPrivilege}
+          />
+        </Form.Field>
+        <Form.Field>
+          <Checkbox
+            radio
             label='User'
             name='checkboxRadioGroup'
             value='user'

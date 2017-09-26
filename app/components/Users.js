@@ -29,8 +29,18 @@ export default class Users extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { users:[], newUserModalOpen:false, privilege: 'user' };
+    this.state = { 
+      users:[], 
+      newUserModalOpen:false,
+      privilege: 'user',
+      username: '',
+      firstname: '',
+      lastname: '',
+      initials: '',
+      email: ''
+    };
 
+    this.handleMessage = (e) => {this.setState({username: e.target.value})}
     this.openModal = () => this.setState({newUserModalOpen: true});
     this.closeModal = () => this.setState({newUserModalOpen: false});
 
@@ -38,7 +48,8 @@ export default class Users extends React.Component {
       this.setState({ privilege: value })
     }
 
-    this.clickSaveUser = () => {
+    this.clickSaveUser = (e) => {
+      alert('Username: '+this.state.username);
       axios.post('/user', {
         username:"gpcrawford",
         
@@ -80,7 +91,7 @@ export default class Users extends React.Component {
       </Modal.Description>
       <Form>
        <Form.Field>
-         <Input placeholder="Username" />
+         <Input placeholder="Username" onChange={this.handleMessage.bind(this)} />
        </Form.Field> 
        <Form.Field>
           Privilege Level: <b>{this.state.privilege}</b>
@@ -102,6 +113,16 @@ export default class Users extends React.Component {
             name='checkboxRadioGroup'
             value='prjadmin'
             checked={this.state.privilege === 'prjadmin'}
+            onChange={this.setPrivilege}
+          />
+        </Form.Field>
+        <Form.Field>
+          <Checkbox
+            radio
+            label='Admin'
+            name='checkboxRadioGroup'
+            value='admin'
+            checked={this.state.privilege === 'admin'}
             onChange={this.setPrivilege}
           />
         </Form.Field>
@@ -146,6 +167,9 @@ export default class Users extends React.Component {
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Username</Table.HeaderCell>
+          <Table.HeaderCell>Name</Table.HeaderCell>
+          <Table.HeaderCell>Initials</Table.HeaderCell>
+          <Table.HeaderCell>Email</Table.HeaderCell>
           <Table.HeaderCell>Privileges</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
@@ -153,12 +177,21 @@ export default class Users extends React.Component {
       <Table.Body>
         {this.state.users.map(user => {
             return(
-              <Table.Row>
+              <Table.Row key={user.id}>
                 <Table.Cell>
-                  {user.username}
+                  {user.userName}
                 </Table.Cell>
                 <Table.Cell>
-                  Sys Admin
+                  {user.firstName} {user.lastName}
+                </Table.Cell>
+                <Table.Cell>
+                  {user.initials}
+                </Table.Cell>
+                <Table.Cell>
+                  {user.email}
+                </Table.Cell>
+                <Table.Cell>
+                  {user.Role.role}
                 </Table.Cell>
               </Table.Row>
             )

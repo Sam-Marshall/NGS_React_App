@@ -25,8 +25,10 @@ module.exports = function(sequelize, DataTypes) {
     }
 
     Role.buildDev = function() {
-      var rec = Role.build({role: 'sysadmin'});
-      rec.save();
+      Role.build({role: 'sysadmin'}).save();
+      Role.build({role: 'prjadmin'}).save();
+      Role.build({role: 'admin'}).save();
+      Role.build({role: 'user'}).save();
     }
 
     return Role;

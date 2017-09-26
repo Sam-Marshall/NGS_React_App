@@ -26,14 +26,17 @@ import {
 
 
 export default class Samples extends React.Component {
+
   constructor(props) {
     super(props);
 
-    this.state = { samples:[], 
+    this.state = { samples:[],
+                   samplesPageBfr:[],
                    projects:[],
                    sampletype: [],
                    species: [],
                    aligngenome: [],
+                   groups:[],
                    enterSampleModalOpen:false,
                    uploadSampleModalOpen:false,
                    pasteSampleModalOpen:false,
@@ -65,6 +68,11 @@ export default class Samples extends React.Component {
     this.state.aligngenome.push({text: 'genome 4', value: 104});
     this.state.aligngenome.push({text: 'genome 5', value: 105});
 
+    this.state.groups.push({text: 'Group 1', value:101});
+    this.state.groups.push({text: 'Group 2', value:102});
+    this.state.groups.push({text: 'Group 3', value:103});
+    this.state.groups.push({text: 'Group 4', value:104});    
+
     this.openModal = () => this.setState({newSampleModalOpen: true});
     this.closeModal = () => this.setState({newSampleModalOpen: false});
 
@@ -82,70 +90,113 @@ export default class Samples extends React.Component {
       this.setState({fileToUpload: e.target.files[0]});
     }
 
-    this.uploadFile = () => {
-      const url = '/sample/upload';
-      const formData = new FormData();
-      formData.append('samplefile', this.state.fileToUpload);
-      const config = {
-         headers: {
-            'content-type': 'multipart/form-data'
-         }
-      }
+   this.onGroupChange = (e, {value}) => {
+     console.log("Selected value: "+value);
+     this.setState({groupId: value});
+   }
+   
+   this.onPagerClick = (e) => {
+     console.log("Pager Click");
+   }
 
-      axios.post(url, formData, config).then(resp => {
-        this.closeUploadModal();
-      });
+   this.prevPages = (e) => {
+     console.log("Previous pages click");
+   }
+
+   this.nextPages = (e) => {
+     console.log("Next pages click");
+   }
+
+   this.uploadFile = () => {
+     const url = '/sample/upload';
+     const formData = new FormData();
+     formData.append('samplefile', this.state.fileToUpload);
+     formData.append('group', 'Group 1');
+     const config = {
+       headers: {
+         'content-type': 'multipart/form-data'
+       }
+     }
+
+     axios.post(url, formData, config).then(resp => {
+       this.closeUploadModal();
+       // Insert returned data into view.
+       this.setState({samples: resp.data.samples});
+     });
     }
+
   }
 
   componentDidMount() {
+    axios.get('/sample')
+      .then(res => {
+        this.setState({ samples: res.data.samples });
+        //Copy first 20 samples into samplesPageBfr
+        var maxSamples = 20;
+        var bfr = [];
+        if (res.data.samples.length < 20)
+          maxSamples = res.data.sample.length;
+        for(var i = 0; i < maxSamples; i++)
+          bfr.push(res.data.samples[i]);
+        this.setState({ samplesPageBfr: bfr});
+      });
   }
 
   componentDidUpdate(prevProps, prevState) {
   }
 
+  EnterSampleModal(props) {
+    return (
+      <div>
+        <Modal
+          open={this.state.enterSampleModalOpen}
+          onClose={this.closeEnterModal}
+          closeOnRootNodeClick={false}
+          size="small"
+        >
+          <Modal.Header>
+           Enter Sample Data
+          </Modal.Header>
+
+          <Modal.Content>
+            <Form>
+              <Form.Field>
+                <Input placeholder="Sample Name" />
+              </Form.Field>
+              <Form.Field>
+                <Dropdown placeholder="Project" options={this.state.projects} />
+              </Form.Field>
+              <Form.Field>
+                <Dropdown placeholder="Species" options={this.state.species} />
+              </Form.Field>
+              <Form.Field>
+                <Dropdown placeholder="Sample Type" options={this.state.sampletype} />
+              </Form.Field>
+              <Form.Field>
+                <Dropdown placeholder="Alignment Genome" options={this.state.aligngenome} />
+              </Form.Field>
+            </Form>
+
+            <Segment basic textAlign="center">
+              <Button.Group>
+                <Button positive>Save</Button>
+                <Button.Or />
+                <Button onClick={this.closeEnterModal}>Cancel</Button>
+              </Button.Group>
+            </Segment>
+
+          </Modal.Content>
+
+        </Modal>
+      </div>
+    )
+  }
+
   render() {
 
-
     return (
-
-     <div>
-  <Modal
-    open={this.state.enterSampleModalOpen}
-    onClose={this.closeEnterModal}
-    closeOnRootNodeClick={false}
-    size="small"
-  >
-    <Modal.Header>
-     Enter Sample Data
-    </Modal.Header>
-    <Modal.Content>
-          <Form>
-            <div>
-            <Input placeholder="Sample name" />
-            </div>
-            <div>
-            <Dropdown placeholder="Project" options={this.state.projects} />
-            </div>
-            <div>
-            <Dropdown placeholder="Species" options={this.state.species} />
-            </div>
-            <div>
-            <Dropdown placeholder="Sample Type" options={this.state.sampletype} />
-            </div>
-            <div>
-            <Dropdown placeholder="Alignment Genome" options={this.state.aligngenome} />
-            </div>
-          </Form>
-      <Segment basic textAlign="center">
-        <Button.Group>
-        <Button positive>Save</Button>
-        <Button.Or />
-        <Button onClick={this.closeEnterModal}>Cancel</Button>
-        </Button.Group>
-      </Segment>
-    </Modal.Content>
-  </Modal>
+      <div>
+        {this.EnterSampleModal()}
   <Modal
     open={this.state.uploadSampleModalOpen}
     onClose={this.closeUploadModal}
@@ -157,7 +208,15 @@ export default class Samples extends React.Component {
     </Modal.Header>
     <Modal.Content>
       <Form>
-        <input type="file" name="samplefile" onChange={this.onFileChange} />
+        <div>
+          <Form.Field>
+          <label>File to Upload</label>
+          <input type="file" name="samplefile" onChange={this.onFileChange} />
+          </Form.Field>
+        </div>
+        <div>
+          <Form.Select label='Group' options={this.state.groups} placeholder='Group' onChange={this.onGroupChange} />
+        </div>
       </Form>
       <Segment basic textAlign="center">
         <Button.Group>
@@ -200,8 +259,8 @@ export default class Samples extends React.Component {
        <Grid.Column width={2}><div></div></Grid.Column>
        <Grid.Column width={12}>
          <Segment textAlign="right">
-           <Button onClick={this.openEnterModal} >Enter Sample</Button>
            <Button onClick={this.openUploadModal} >Upload Samples</Button>
+           <Button onClick={this.openEnterModal} >Enter Sample</Button>
            <Button onClick={this.openPasteModal} >Paste Samples</Button>
          </Segment>
        </Grid.Column>
@@ -216,40 +275,55 @@ export default class Samples extends React.Component {
         <Table.Row>
           <Table.HeaderCell>Id</Table.HeaderCell>
           <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.HeaderCell>Project</Table.HeaderCell>
+          <Table.HeaderCell>Sample Type</Table.HeaderCell>
           <Table.HeaderCell>Species</Table.HeaderCell>
+          <Table.HeaderCell>Alignment</Table.HeaderCell>
+          <Table.HeaderCell>Scientist</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
-{/*
-        {this.state.samples.map(sample => {
+
+        {this.state.samplesPageBfr.map(sample => {
             return(
-              <Table.Row>
+              <Table.Row key={sample.id}>
                 <Table.Cell>
-                  {sample.sampleid}
+                  {sample.id}
                 </Table.Cell>
                 <Table.Cell>
-                  Sys Admin
+                  {sample.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {sample.SampleType.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {sample.Species.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {sample.AlignmentGenome.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {sample.Project.User.initials}
                 </Table.Cell>
               </Table.Row>
             )
           })
         }
-*/}
+
       </Table.Body>
 
       <Table.Footer>
       <Table.Row>
         <Table.HeaderCell colSpan='3'>
           <Menu floated='right' pagination>
-            <Menu.Item as='a' icon>
+            <Menu.Item as='a' icon onClick={this.prevPages}>
               <Icon name='left chevron' />
             </Menu.Item>
-            <Menu.Item as='a'>1</Menu.Item>
-            <Menu.Item as='a'>2</Menu.Item>
-            <Menu.Item as='a'>3</Menu.Item>
-            <Menu.Item as='a'>4</Menu.Item>
-            <Menu.Item as='a' icon>
+            <Menu.Item as='a' onClick={this.onPagerClick}>1</Menu.Item>
+            <Menu.Item as='a' onClick={this.onPagerClick}>2</Menu.Item>
+            <Menu.Item as='a' onClick={this.onPagerClick}>3</Menu.Item>
+            <Menu.Item as='a' onClick={this.onPagerClick}>4</Menu.Item>
+
+            <Menu.Item as='a' icon onClick={this.nextPages}>
               <Icon name='right chevron' />
             </Menu.Item>
           </Menu>

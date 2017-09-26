@@ -13,11 +13,9 @@ const parse = require('csv-parse');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log("Multer disk storage (destination)");
     cb(null, 'uploads')
   },
   filename: function (req, file, cb) {
-    console.log("Multer disk storage (filename): "+file.fieldname);
     req.filename = file.fieldname+'-'+Date.now();
     cb(null, file.fieldname + '-' + Date.now())
   }
@@ -56,7 +54,11 @@ app.use(session({
 
 // Sets a port
 var PORT = process.env.PORT || 8080;
-var RESYNCDB = process.env.RESYNC_DB || false;
+
+// Environment flag can force DB resync
+var RESYNCDB = false;
+if (process.env.RESYNC_DB && (process.env.RESYNC_DB == 'true'))
+  RESYNCDB = true;
 
 // Run Morgan for Logging
 app.use(logger("dev"));
@@ -97,32 +99,56 @@ app.get('/auth/slack/redirect/', function(req, res) {
   console.log("Auth redirect");
   getSlackAccessToken(req.query.code, function(data) {
     console.log("Slack auth token response. ",data);
-    req.session.authenticated = true;
-    req.session.username = data.user.name;
-    res.redirect('/');
+    //Check that user exists in database
+    db.User.findOne({where: {userName: data.user.name}, include:{model: db.Role} }).then(function(rec){
+      if (rec == null) {
+        req.session.authenticated = false;
+        req.session.role = 'none';
+        res.redirect('/')
+      }
+      else {
+        console.log("Found user in database");
+        req.session.userid = data.user.id;
+        req.session.authenticated = true;
+        req.session.username = data.user.name;
+        req.session.role = rec.Role.role;
+        req.session.fullname = rec.firstName+' '+rec.lastName;
+        res.redirect('/');
+      }
+    });
   });
 });
 
-app.post('/sample/upload', upload.single('samplefile'), function(req, res, next) {
-  console.log('Sample file was uploaded and stored as: '+req.filename);
+app.get('/logout', function(req, res) {
+  console.log("Logout");
 
-  var nRows = 0;
+  req.session.destroy();
+
+  res.redirect('/')
+});
+
+app.post('/sample/upload', upload.single('samplefile'), function(req, res, next) {
+  console.log('Sample file was uploaded and stored as: '+req.filename+' group is: '+req.body.group);
+
+  var rowsProcessed = 0;
+  var rowsRead = 0;
+  var samples = [];
   var sampleTypeId = 0;
   var speciesId = 0;
   var alignmentGenome = 0;
   var userId = 0;
+  var endOfFile = false;
 //Iterate over file, skipping first 4 lines
   fs.createReadStream("uploads/"+req.filename)
     .pipe(parse({auto_parse: true, from: 5}))
     .on('data', function(cols) {
-      console.log("Line has been read." + cols[3]);
+      rowsRead++;
       //Get id for sampletype
       db.SampleType.findOne({
           where: {
             name: cols[4]
           }
       }).then(function(resp) {
-        console.log("Got sample type: "+resp.name);
         sampleTypeId = resp.id;
         //Get id for species
         db.Species.findOne({
@@ -130,7 +156,6 @@ app.post('/sample/upload', upload.single('samplefile'), function(req, res, next)
               name: cols[1]
             }
           }).then(function(resp) {
-              console.log("Got species: "+resp.name);
               speciesId = resp.id;
               //Get id for alignment genome
               db.AlignmentGenome.findOne({
@@ -138,7 +163,6 @@ app.post('/sample/upload', upload.single('samplefile'), function(req, res, next)
                    name: cols[2]
                  }
               }).then(function(resp) {
-                   console.log("Got alignment genome: "+resp.name);
                    alignmentGenomeId = resp.id;
                    // Get id of user with initials
                    db.User.findOne({
@@ -146,35 +170,61 @@ app.post('/sample/upload', upload.single('samplefile'), function(req, res, next)
                         initials: cols[5]
                       }
                    }).then(function(resp) {
-                      console.log("Got user: "+resp.userName);
                       userId = resp.id;
-                      db.Sample.create({name: cols[3], project_id: 1, sampletype_id: sampleTypeId, species_id: speciesId, alignmentgenome_id: alignmentGenomeId});
-                      nRows++;
+                      db.Sample.create({
+                        name: cols[3],
+                        project_id: 1,
+                        sampletype_id: sampleTypeId,
+                        species_id: speciesId,
+                        alignmentgenome_id: alignmentGenomeId
+                      }).then(function(record) {
+                           console.log(record.id);
+                           rowsProcessed++;
+                           samples.push({id: record.id, name: cols[3], sampletype:cols[4], species:cols[1], alignmentgenome: cols[2], inits:cols[5]});
+                           if (endOfFile & (rowsProcessed == rowsRead)) {
+                             console.log('Sample file was uploaded and stored as: '+req.filename+' group is: '+req.body.group);
+                             res.json({"status": "OK", "statuscode": 200, "nrows":rowsProcessed, "samples":samples});
+                           }
+                         });
                      })
                  })
             });
         });  
     })
     .on('end', function() {
-      console.log("End of file.");
-
-      res.json({"status": "OK", "statuscode": 200, "nrows":nRows});
+      console.log("End of file. nRows: "+rowsRead);
+      endOfFile = true;
+//      res.json({"status": "OK", "statuscode": 200, "nrows":nRows, "samples":samples});
     });
 
 })
 
-app.get('/user/', function(req, res) {
-  console.log("User request.");
-  res.json({"users":[{"username":"gpcrawford"}, {"username":"marjorie.k"}, {"username":"sam-marshall"}]});
+app.get('/sample/', function(req, res) {
+  console.log("Sample request.");
+
+  db.Sample.findAll({
+      include: [db.SampleType, db.Species, db.AlignmentGenome, {model: db.Project, include:[db.User]}]
+    }).then(function(recs) {
+    res.json({samples: recs});
+  });
 });
 
+app.get('/user/', function(req, res) {
+  console.log("User request.");
+  db.User.findAll({
+      include: [db.Role]
+    }).then(function(records) {
+    res.json({users: records});
+  });
+});
 
 app.post('/user/', function(req, res) {
-  console.log("User POST");
-  db.User.findOrCreate({where:{userName:"gpcrawford"}, defaults:{role_id: 1, firstName:"Greg", lastName:"Crawford", email:"gpcrawford@northwestern.edu", initials:"gpc", password:""}})
+  console.log("User POST. username: "+req.body.username);
+/*  db.User.findOrCreate({where:{userName:"gpcrawford"}, defaults:{role_id: 1, firstName:"Greg", lastName:"Crawford", email:"gpcrawford@northwestern.edu", initials:"gpc", password:""}})
       .spread((user, created) => {
         console.log(created)
       })
+*/
   res.json({"status":"OK", "statuscode":200});
 });
 

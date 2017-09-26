@@ -34,14 +34,15 @@ export default class Tech extends React.Component {
       thingOne: "Project One",
       thingTwo: "fec",
       thingThree: "hg19",
-      thingFour: "15"
+      thingFour: "15",
+      projectInfo: []
     };
 
-    {/*this.openModal = () => this.setState({newSampleModalOpen: true});
+    this.openModal = () => this.setState({newSampleModalOpen: true});
     this.closeModal = () => this.setState({newSampleModalOpen: false});
 
     this.openEnterModal = () => this.setState({enterSampleModalOpen:true});
-    this.closeEnterModal = () => this.setState({enterSampleModalOpen:false});*/}
+    this.closeEnterModal = () => this.setState({enterSampleModalOpen:false});
     }
 
   componentDidMount() {
@@ -51,10 +52,15 @@ export default class Tech extends React.Component {
   }
 
   render() {
+      {/*const sortOptions = [ 
+      { key: 'project', value: 'project', text: 'Project' },
+      { key: 'sample', value: 'sample', text: 'Sample' }
+      ]*/}
       const panes=[
       { menuItem: 'New', render: () => 
         <Tab.Pane attached={false}>
           <Header as='h1'>New Submissions</Header>
+          {/*<Dropdown placeholder='Select View' fluid search selection options={sortOptions} />*/}
               <Table celled>
                 <Table.Header>
                   <Table.Row>
@@ -92,6 +98,7 @@ export default class Tech extends React.Component {
       { menuItem: 'Processed', render: () => 
         <Tab.Pane attached={false}>
           <Header as='h1'>Processed Samples</Header>
+          <Button onClick={this.openEnterModal} >Enter Sample</Button>
           <Table celled>
                 <Table.Header>
                   <Table.Row>
@@ -129,7 +136,7 @@ export default class Tech extends React.Component {
 
 
     <div>
-      {/*<Modal
+      <Modal
         open={this.state.enterSampleModalOpen}
         onClose={this.closeEnterModal}
         closeOnRootNodeClick={false}
@@ -164,7 +171,7 @@ export default class Tech extends React.Component {
           </Button.Group>
         </Segment>
       </Modal.Content>
-      </Modal>*/}
+      </Modal>
       {/*<Button onClick={this.openEnterModal} >Enter Sample</Button>*/}
       <Container>
         <Segment textAlign="center">

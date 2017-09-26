@@ -5,6 +5,10 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
+        numSample:{
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         createdAt: {
             type: DataTypes.DATE,
             field: 'createdAt',
@@ -37,9 +41,9 @@ module.exports = function(sequelize, DataTypes) {
     }
 
     Project.buildDev = function() {
-      Project.build({name: 'Mouse Aging', user_id: 1}).save();
-      Project.build({name: 'Flu', user_id: 1}).save();
-      Project.build({name: 'Another Project', user_id: 1}).save();
+      Project.build({name: 'Mouse Aging', numSample: 5, user_id: 1}).save();
+      Project.build({name: 'Flu', numSample: 15, user_id: 1}).save();
+      Project.build({name: 'Another Project', numSample: 6, user_id: 1}).save();
     }
 
     return Project;

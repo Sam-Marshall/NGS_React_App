@@ -5,7 +5,7 @@ import { HashRouter, BrowserRouter, Router, Route, Switch, Redirect } from 'reac
 import Main from '../components/Main';
 import Projects from '../components/Projects';
 import Users from '../components/Users';
-import Samples from '../components/Samples';
+import Samples from '../components/SampleInput';
 import Libraries from '../components/Libraries';
 import NavBar from '../components/NavBar';
 import Tech from '../components/Tech';
@@ -72,23 +72,3 @@ export default class Routes extends React.Component {
 
   }
 }
-
-
-// Export the Routes
-/*
-module.exports = (
-
-  <HashRouter>
-    <div>
-        <NavBar>
-        </NavBar>
-	<Switch>
-          <Route exact path="/" render={()=>(<Redirect to="/home"/>)} /> 
-	  <Route path="/home" component={Main}/>
-          <Route path="/projects" component={Projects} />
-    	</Switch>
-    </div>
-  </HashRouter>
-  
-);
-*/

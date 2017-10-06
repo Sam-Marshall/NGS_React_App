@@ -1,18 +1,10 @@
 import React from 'react';
 
 import {
-  Button,
-  Container,
-  Divider,
-  Grid,
-  Header,
-  Icon,
-  Image,
-  List,
-  Menu,
-  Sidebar,
-  Segment,
-  Visibility,
+  Button, Container, Divider,
+  Grid, Header, Icon,
+  Image, List, Menu,
+  Sidebar, Segment, Visibility,
 } from 'semantic-ui-react';
 
 import {Link, NavLink} from 'react-router-dom';
@@ -24,18 +16,21 @@ export default class NavBar extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {isReady: false,
-                  isAuthenticated: false,
-                  userName: '',
-                  userRole: 'none',
-                  activeItem:'home'};
+    this.state = {
+      isReady: false,
+      isAuthenticated: false,
+      userName: '',
+      userRole: 'none',
+      activeItem:'home'
+
+    };
    
     this.slackHRef="https://slack.com/oauth/authorize?scope=identity.basic,identity.email&client_id=187494903379.207940946065"; 
 
     this.onClickHandler = (e, props) => {
-//      alert("This is the Click Handler: "+props.name);
 
       this.setState({activeItem:name});
+
     }
 
     this.onLogOut = (e, props) => {
@@ -55,12 +50,19 @@ export default class NavBar extends React.Component {
            });
          } else {
           this.setState({
-            isAuthenticated: false,
-            userRole: 'none',
+            isAuthenticated: true,
+            userRole: 'sysadmin',
             isReady: true
           });
         }
       });
+    
+    {/*     
+    Changed else response above to get db up and running. Was locked out of the tabs otherwise
+      isAuthenticated: false,
+      userRole: 'none',
+      isReady: true
+    */}
 
   }
 

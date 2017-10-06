@@ -25,10 +25,6 @@ import { Link } from 'react-router-dom';
 
 import helpers from './utils/helpers';
 
-
-// require components
-import Child from './children/Child'
-
 export default class Main extends React.Component{
 
   constructor() {

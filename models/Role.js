@@ -24,12 +24,12 @@ module.exports = function(sequelize, DataTypes) {
         });
     }
 
-    Role.buildDev = function() {
-      Role.build({role: 'sysadmin'}).save();
-      Role.build({role: 'prjadmin'}).save();
-      Role.build({role: 'admin'}).save();
-      Role.build({role: 'user'}).save();
-    }
+    // Role.buildDev = function() {
+    //   Role.build({role: 'sysadmin'}).save();
+    //   Role.build({role: 'prjadmin'}).save();
+    //   Role.build({role: 'admin'}).save();
+    //   Role.build({role: 'user'}).save();
+    // }
 
     return Role;
     

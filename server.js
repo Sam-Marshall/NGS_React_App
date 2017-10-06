@@ -220,22 +220,22 @@ app.get('/user/', function(req, res) {
 
 app.post('/user/', function(req, res) {
   console.log("User POST. username: "+req.body.username);
-/*  db.User.findOrCreate({where:{userName:"gpcrawford"}, defaults:{role_id: 1, firstName:"Greg", lastName:"Crawford", email:"gpcrawford@northwestern.edu", initials:"gpc", password:""}})
-      .spread((user, created) => {
-        console.log(created)
-      })
-*/
+  // db.User.findOrCreate({where:{userName:"gpcrawford"}, defaults:{role_id: 1, firstName:"Greg", lastName:"Crawford", email:"gpcrawford@northwestern.edu", initials:"gpc", password:""}})
+  //     .spread((user, created) => {
+  //       console.log(created)
+  //     })
+
   res.json({"status":"OK", "statuscode":200});
 });
 
 if (RESYNCDB) {
   db.sequelize.sync({ force: true }).then(function() {
-      db.Role.buildDev();
-      db.User.buildDev();
-      db.Species.buildDev();
-      db.AlignmentGenome.buildDev();
-      db.SampleType.buildDev();
-      db.Project.buildDev();
+      // db.Role.buildDev();
+      // db.User.buildDev();
+      // db.Species.buildDev();
+      // db.AlignmentGenome.buildDev();
+      // db.SampleType.buildDev();
+      // db.Project.buildDev();
       app.listen(PORT, function() {
           console.log("App listening on PORT: " + PORT);
       });

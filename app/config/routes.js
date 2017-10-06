@@ -5,7 +5,7 @@ import { HashRouter, BrowserRouter, Router, Route, Switch, Redirect } from 'reac
 import Main from '../components/Main';
 import Projects from '../components/Projects';
 import Users from '../components/Users';
-import Samples from '../components/SampleInput';
+import BasicUserInterface from '../components/BasicUserInterface';
 import Libraries from '../components/Libraries';
 import NavBar from '../components/NavBar';
 import Tech from '../components/Tech';
@@ -30,8 +30,8 @@ export default class Routes extends React.Component {
         <div>
           <NavBar />
           <Switch>
-            <Route exact path="/" render={()=>(<Redirect to="/home"/>)} />
-            <Route path="/home" component={Main}/>
+            <Route exact path="/" render={()=>(<Redirect to="/welcome"/>)} />
+            <Route path="/welcome" component={Main}/>
             <Route path="/projects"
               render={() =>
                (
@@ -45,10 +45,10 @@ export default class Routes extends React.Component {
                 )}
             />
 
-            <Route path="/samples"
+            <Route path="/home"
               render={() =>
                 (
-                  <Samples />
+                  <BasicUserInterface />
                 )}
             />
 

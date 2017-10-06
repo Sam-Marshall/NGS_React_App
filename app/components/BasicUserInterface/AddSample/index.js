@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import axios from 'axios';
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 import {
   Accordion, Button,
@@ -21,7 +21,7 @@ const { Column, Row } = Grid;
 const { HeaderCell, Cell } = Table;
 const { Item } = Menu;
 
-export default class Samples extends Component {
+export default class AddSample extends Component {
 
   constructor(props) {
     super(props);
@@ -37,12 +37,8 @@ export default class Samples extends Component {
       enterSampleModalOpen:false,
       uploadSampleModalOpen:false,
       pasteSampleModalOpen:false,
-      newSampleModalOpen:false,
       fileToUpload: '' 
     };   
-
-    this.openModal = () => this.setState({newSampleModalOpen: true});
-    this.closeModal = () => this.setState({newSampleModalOpen: false});
 
     this.openEnterModal = () => this.setState({enterSampleModalOpen:true});
     this.closeEnterModal = () => this.setState({enterSampleModalOpen:false});
@@ -266,93 +262,89 @@ export default class Samples extends Component {
         {this.PasteSampleModal()}
 
         <Segment textAlign="center">
-           <h2>Sample Entry</h2>
+
+          <Header as='h2' content='Samples'/>
+
+          <Grid>
+
+            <Row>
+               <Column textAlign="right">
+                   <Button onClick={this.openUploadModal}>Upload Samples</Button>
+                   <Button onClick={this.openEnterModal}>Enter Sample</Button>
+                   <Button onClick={this.openPasteModal}>Paste Samples</Button>
+               </Column>
+            </Row>
+
+            <Row>
+              <Column textAlign="left">
+                  <Table celled>
+                    
+                    <Table.Header>
+                      <Table.Row>
+                        <HeaderCell>Id</HeaderCell>
+                        <HeaderCell>Name</HeaderCell>
+                        <HeaderCell>Sample Type</HeaderCell>
+                        <HeaderCell>Species</HeaderCell>
+                        <HeaderCell>Alignment</HeaderCell>
+                        <HeaderCell>Scientist</HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+
+                    <Table.Body>
+                      {this.state.samplesPageBfr.map(sample => {
+                          return(
+                            <Table.Row key={sample.id}>
+                              <Cell>
+                                {sample.id}
+                              </Cell>
+                              <Cell>
+                                {sample.name}
+                              </Cell>
+                              <Cell>
+                                {sample.SampleType.name}
+                              </Cell>
+                              <Cell>
+                                {sample.Species.name}
+                              </Cell>
+                              <Cell>
+                                {sample.AlignmentGenome.name}
+                              </Cell>
+                              <Cell>
+                                {sample.Project.User.initials}
+                              </Cell>
+                            </Table.Row>
+                          )
+                        })
+                      }
+                    </Table.Body>
+
+                    <Table.Footer>
+                      <Table.Row>
+                        <HeaderCell colSpan='6'>
+                          <Menu floated='right' pagination>
+                            <Item as='a' icon onClick={this.prevPages}>
+                              <Icon name='left chevron' />
+                            </Item>
+                            <Item as='a' onClick={this.onPagerClick}>1</Item>
+                            <Item as='a' onClick={this.onPagerClick}>2</Item>
+                            <Item as='a' onClick={this.onPagerClick}>3</Item>
+                            <Item as='a' onClick={this.onPagerClick}>4</Item>
+
+                            <Item as='a' icon onClick={this.nextPages}>
+                              <Icon name='right chevron' />
+                            </Item>
+                          </Menu>
+                        </HeaderCell>
+                      </Table.Row>
+                    </Table.Footer>
+
+                  </Table>
+              </Column>
+            </Row>
+            
+          </Grid>
+
         </Segment>
-
-        <Grid>
-          <Row>
-             <Column width={2}><div></div></Column>
-             <Column width={12}>
-               <Segment textAlign="right">
-                 <Button onClick={this.openUploadModal}>Upload Samples</Button>
-                 <Button onClick={this.openEnterModal}>Enter Sample</Button>
-                 <Button onClick={this.openPasteModal}>Paste Samples</Button>
-               </Segment>
-             </Column>
-             <Column width={2}><div></div></Column>
-          </Row>
-
-          <Row>
-            <Column width={2}><div></div></Column>
-            <Column width={12}>
-              <Segment textAlign="left">
-                <Table celled>
-                  
-                  <Table.Header>
-                    <Table.Row>
-                      <HeaderCell>Id</HeaderCell>
-                      <HeaderCell>Name</HeaderCell>
-                      <HeaderCell>Sample Type</HeaderCell>
-                      <HeaderCell>Species</HeaderCell>
-                      <HeaderCell>Alignment</HeaderCell>
-                      <HeaderCell>Scientist</HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-
-                  <Table.Body>
-                    {this.state.samplesPageBfr.map(sample => {
-                        return(
-                          <Table.Row key={sample.id}>
-                            <Cell>
-                              {sample.id}
-                            </Cell>
-                            <Cell>
-                              {sample.name}
-                            </Cell>
-                            <Cell>
-                              {sample.SampleType.name}
-                            </Cell>
-                            <Cell>
-                              {sample.Species.name}
-                            </Cell>
-                            <Cell>
-                              {sample.AlignmentGenome.name}
-                            </Cell>
-                            <Cell>
-                              {sample.Project.User.initials}
-                            </Cell>
-                          </Table.Row>
-                        )
-                      })
-                    }
-                  </Table.Body>
-
-                  <Table.Footer>
-                    <Table.Row>
-                      <HeaderCell colSpan='6'>
-                        <Menu floated='right' pagination>
-                          <Item as='a' icon onClick={this.prevPages}>
-                            <Icon name='left chevron' />
-                          </Item>
-                          <Item as='a' onClick={this.onPagerClick}>1</Item>
-                          <Item as='a' onClick={this.onPagerClick}>2</Item>
-                          <Item as='a' onClick={this.onPagerClick}>3</Item>
-                          <Item as='a' onClick={this.onPagerClick}>4</Item>
-
-                          <Item as='a' icon onClick={this.nextPages}>
-                            <Icon name='right chevron' />
-                          </Item>
-                        </Menu>
-                      </HeaderCell>
-                    </Table.Row>
-                  </Table.Footer>
-
-                </Table>
-              </Segment>
-            </Column>
-            <Column width={2}><div></div></Column>
-          </Row>
-        </Grid>
 
      </div>
     )

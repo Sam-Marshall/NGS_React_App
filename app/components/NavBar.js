@@ -21,7 +21,7 @@ export default class NavBar extends React.Component {
       isAuthenticated: false,
       userName: '',
       userRole: 'none',
-      activeItem:'home'
+      activeItem:'welcome'
 
     };
    
@@ -92,13 +92,18 @@ export default class NavBar extends React.Component {
         <Segment inverted>
         <Container>
           <Menu inverted pointing secondary size='large' defaultActiveIndex={0}>
-            <Menu.Item
-              as={NavLink} to='/home'
-              name={'home'}
-              active={activeItem === 'home'}
-              onClick={this.onClickHandler}>
-              Home
-            </Menu.Item>
+            
+            { !isAuthenticated ? (
+              
+              <Menu.Item
+                as={NavLink} to='/welcome'
+                name={'welcome'}
+                active={activeItem === 'welcome'}
+                onClick={this.onClickHandler}>
+                Welcome
+              </Menu.Item>
+            
+            ) : null}
 
             { isAuthenticated ? (
               <Container>
@@ -119,11 +124,11 @@ export default class NavBar extends React.Component {
                     Projects
                   </Menu.Item> ) : null }
 
-                <Menu.Item as={NavLink} to='/samples'
-                  name='samples'
-                  active={activeItem === 'samples'}
+                <Menu.Item as={NavLink} to='/home'
+                  name='home'
+                  active={activeItem === 'home'}
                   onClick={this.onClickHandler}>
-                  Samples
+                  Home
                 </Menu.Item>
           
                 { ((userRole == 'sysadmin') || (userRole == 'projadmin') || (userRole == 'admin')) ? ( 

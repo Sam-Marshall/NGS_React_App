@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
 
     Group.associate = function(models) {
         this.hasMany(models.Sample, {
-            foreignKey: 'Group_id'
+            foreignKey: 'group_id'
         });
     }
 

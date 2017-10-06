@@ -67,6 +67,13 @@ module.exports = function(sequelize, DataTypes) {
             foreignKey: 'sample_id'
         });
 
+        this.belongsTo(models.Group, {
+            foreignKey: {
+                name: 'group_id',
+                allowNull: false
+            }
+        });
+
     }
 
     return Sample;

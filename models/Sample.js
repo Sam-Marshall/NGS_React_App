@@ -35,6 +35,13 @@ module.exports = function(sequelize, DataTypes) {
             }
         });
 
+         this.belongsTo(models.Project, {
+            foreignKey: {
+                name: 'user_id',
+                allowNull: false
+            }
+        });
+
         this.belongsTo(models.SampleType, {
             foreignKey: {
                 name: 'sampletype_id',

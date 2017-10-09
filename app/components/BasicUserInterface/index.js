@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import AddSample from './AddSample';
 import Profile from './Profile';
+import SummaryStats from './SummaryStats';
 
 import {
   Accordion, Button,
@@ -52,6 +53,7 @@ export default class BasicUserInterface extends Component {
           </Column>
           <Column width={4}>
             <Profile />
+            <SummaryStats />
           </Column>
         </Grid>
       </Container>

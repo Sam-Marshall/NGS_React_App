@@ -37,7 +37,8 @@ export default class AddSample extends Component {
       enterSampleModalOpen:false,
       uploadSampleModalOpen:false,
       pasteSampleModalOpen:false,
-      fileToUpload: '' 
+      fileToUpload: '',
+      SampleAsc: false
     };   
 
     this.openEnterModal = () => this.setState({enterSampleModalOpen:true});
@@ -119,6 +120,10 @@ export default class AddSample extends Component {
       this.state.groups.push({text: 'Group 2', value:102});
       this.state.groups.push({text: 'Group 3', value:103});
       this.state.groups.push({text: 'Group 4', value:104}); 
+
+    this.sampleSort = () => {
+      this.setState({ SampleAsc: !this.state.SampleAsc })
+    }
   }
 
   componentDidMount() {
@@ -126,6 +131,7 @@ export default class AddSample extends Component {
       .then(res => {
 
         var samples = res.data.samples;
+        console.log(samples);
         this.setState({ samples: samples });
         //Copy first 20 samples into samplesPageBfr
         var maxSamples = 20;
@@ -180,7 +186,7 @@ export default class AddSample extends Component {
               <Button.Group>
                 <Button positive>Save</Button>
                 <Button.Or />
-                <Button onClick={this.closeEnterModal}>Cancel</Button>
+                <Button negative onClick={this.closeEnterModal}>Cancel</Button>
               </Button.Group>
             </Segment>
 
@@ -217,9 +223,9 @@ export default class AddSample extends Component {
             </Form>
             <Segment basic textAlign="center">
               <Button.Group>
-              <Button positive onClick={this.uploadFile}>Save</Button>
-              <Button.Or />
-              <Button onClick={this.closeUploadModal}>Cancel</Button>
+                <Button positive onClick={this.uploadFile}>Save</Button>
+                <Button.Or />
+                <Button negative onClick={this.closeUploadModal}>Cancel</Button>
               </Button.Group>
             </Segment>
           </Modal.Content>
@@ -246,9 +252,9 @@ export default class AddSample extends Component {
             </Form>
             <Segment basic textAlign="center">
               <Button.Group>
-              <Button positive>Save</Button>
-              <Button.Or />
-              <Button onClick={this.closePasteModal}>Cancel</Button>
+                <Button positive>Save</Button>
+                <Button.Or />
+                <Button negative onClick={this.closePasteModal}>Cancel</Button>
               </Button.Group>
             </Segment>
           </Modal.Content>
@@ -285,22 +291,28 @@ export default class AddSample extends Component {
                   <Table celled>
                     
                     <Table.Header>
-                      <Table.Row>
-                        <HeaderCell>Id</HeaderCell>
-                        <HeaderCell>Name</HeaderCell>
+                      <Table.Row textAlign="center">
+                        <HeaderCell>Project Name</HeaderCell>
+                        <HeaderCell onClick={this.sampleSort}>Sample Name 
+                          {
+                            this.state.SampleAsc ? 
+                            <Icon name='caret up' size='small' /> : 
+                            <Icon name='caret down' size='small' />
+                          }
+                        </HeaderCell>
                         <HeaderCell>Sample Type</HeaderCell>
                         <HeaderCell>Species</HeaderCell>
-                        <HeaderCell>Alignment</HeaderCell>
-                        <HeaderCell>Scientist</HeaderCell>
+                        <HeaderCell>Alignment Genome</HeaderCell>
+                        <HeaderCell>Processed</HeaderCell>
                       </Table.Row>
                     </Table.Header>
 
                     <Table.Body>
                       {this.state.samplesPageBfr.map(sample => {
                           return(
-                            <Table.Row key={sample.id}>
+                            <Table.Row key={sample.id} textAlign="center">
                               <Cell>
-                                {sample.id}
+                                {sample.Project.name}
                               </Cell>
                               <Cell>
                                 {sample.name}
@@ -315,7 +327,7 @@ export default class AddSample extends Component {
                                 {sample.AlignmentGenome.name}
                               </Cell>
                               <Cell>
-                                {sample.Project.User.initials}
+                                { sample.hasBeenProcessed ? "Yes" : "No"}
                               </Cell>
                             </Table.Row>
                           )

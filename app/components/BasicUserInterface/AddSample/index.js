@@ -124,15 +124,20 @@ export default class AddSample extends Component {
   componentDidMount() {
     axios.get('/sample')
       .then(res => {
-        this.setState({ samples: res.data.samples });
+
+        var samples = res.data.samples;
+        this.setState({ samples: samples });
         //Copy first 20 samples into samplesPageBfr
         var maxSamples = 20;
         var bfr = [];
-        if (res.data.samples.length < 20)
-          maxSamples = res.data.sample.length;
-        for(var i = 0; i < maxSamples; i++)
-          bfr.push(res.data.samples[i]);
+        if (samples.length < 20){
+          maxSamples = samples.length;
+        }
+        for(var i = 0; i < maxSamples; i++){
+          bfr.push(samples[i]);
+        }
         this.setState({ samplesPageBfr: bfr});
+
       });
   }
 

@@ -4,7 +4,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 import {
-  Accordion, Button, Checkbox,
+  Accordion, Button,
   Container, Divider,
   Dropdown, Form,
   Grid, Header,

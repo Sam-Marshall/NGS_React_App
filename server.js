@@ -207,6 +207,7 @@ app.get('/sample/', function(req, res) {
     }).then(function(recs) {
     res.json({samples: recs});
   });
+    
 });
 
 app.get('/user/', function(req, res) {
